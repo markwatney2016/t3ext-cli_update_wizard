@@ -56,7 +56,25 @@ class MigrationCommandController extends CommandController {
 		}
 	}
 
-	/**
+    /**
+     * perform all available migrations
+     */
+    public function performAllCommand() {
+        $updates = $this->updateToolService->getAvailableUpdates();
+
+        if (empty($updates)) {
+            $this->outputLine('No updates available.');
+        } else {
+            foreach ($updates as $update) {
+                $identifier = $update['identifier'];
+
+                $this->output(sprintf('Update wizard \'%s\': ', $identifier));
+                $this->performCommand($identifier);
+            }
+        }
+    }
+
+    /**
 	 * perform the specified migration
 	 *
 	 * @param string $identifier
